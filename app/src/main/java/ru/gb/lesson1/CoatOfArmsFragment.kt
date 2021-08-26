@@ -1,44 +1,53 @@
 package ru.gb.lesson1
 
+import android.content.res.TypedArray
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
-
-
-private const val ARG_INDEX = "index"
-private lateinit var index: Int
 
 
 class CoatOfArmsFragment : Fragment() {
 
-    private var param1: String? = null
+
+    private lateinit var city: City
 
     companion object {
 
-        fun newInstance(index: Int) {
+        const val ARG_CITY = "city"
+
+        fun newInstance(city: City): CoatOfArmsFragment {
             val fragment = CoatOfArmsFragment()
 
             val args: Bundle = Bundle()
-            args.putInt(ARG_INDEX, index)
+            args.putParcelable(ARG_CITY, city)
             fragment.arguments = args;
+            return fragment
         }
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_INDEX)
-
+        if (arguments != null) {
+            city = requireArguments().getParcelable(ARG_CITY)!!;
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_coat_of_arms, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val imageCoatOfArms: AppCompatImageView = view.findViewById(R.id.coat_of_arms)
+        val images: TypedArray = resources.obtainTypedArray(R.array.coat_of_arms_imgs)
+        imageCoatOfArms.setImageResource(images.getResourceId(city.imageIndex, -1))
+
     }
 
 
